@@ -2,7 +2,7 @@
 
 Progetto\_Paracadute
 
-\# Simulazione Moto Paracadutista
+**Simulazione Moto Paracadutista**
 
 Questo repository contiene il progetto d'esame per la simulazione della dinamica di caduta di un paracadutista. Il modello fisico include la forza di gravità e l'attrito viscoso dell'aria (regime lineare), gestendo la fase di apertura del paracadute a una quota prestabilita.
 
@@ -12,7 +12,7 @@ Il progetto si compone di tre parti principali:
 
 
 
-1. Modulo per la risoluzione dell'equazione differenziale del moto
+1\. Modulo per la risoluzione dell'equazione differenziale del moto
 
 2\. Analisi parametrica della fisica del moto.
 
@@ -20,23 +20,23 @@ Il progetto si compone di tre parti principali:
 
 
 
-\*Descrizione dei File\*
+**Descrizione dei File**
 
 
 
-\* paracadute1.py: Modulo contenente la classe Paracadute. Definisce le equazioni differenziali del moto e utilizza la funzione odeint della libreria scipy per risolverle.
+-  paracadute1.py: Modulo contenente la classe Paracadute. Definisce le equazioni differenziali del moto e utilizza la funzione odeint della libreria scipy per risolverle.
 
-\* analisi\_dati.py: Script per generare grafici comparativi al variare dei parametri fisici 
+- analisi\_dati.py: Script per generare grafici comparativi al variare dei parametri fisici 
 
-\* simulazione.py: Script per la simulazione Montecarlo. Genera una popolazione di lanci con distribuzione casuale (tempi di Poisson, masse Gaussiane) e produce statistiche sugli atterraggi.
-
-
-
-\*Istruzioni per l'Esecuzione\*
+- simulazione.py: Script per la simulazione Montecarlo. Genera una popolazione di lanci con distribuzione casuale (tempi di Poisson, masse Gaussiane) e produce statistiche sugli atterraggi.
 
 
 
-1\. Analisi Dati
+**Istruzioni per l'Esecuzione**
+
+
+
+**1\. Analisi Dati**
 
 Questo script analizza come cambiano la traiettoria e le velocità al variare di un parametro fisico.
 
@@ -48,9 +48,11 @@ python analisi\_dati.py --help
 
 
 
-Personalizzazione e Default:
+_Personalizzazione e Default_
 
-Lo script utilizza dei valori di default per tutti i parametri non specificati, in particolare: Massa=75kg, 
+Lo script utilizza dei valori di default per tutti i parametri non specificati, in particolare: 
+
+Massa=75kg, 
 
 Quota=4000m, 
 
@@ -68,13 +70,13 @@ Quota apertura = 1000 m
 
 
 
-Sintassi di base:
+_Sintassi di base:_
 
 python analisi\_dati.py -var \[VARIABILE\_DA\_ANALIZZARE] -start \[INIZIO] -stop \[FINE] \[PERSONALIZZAZIONE\_PARAMETRI]
 
 
 
-Esempi di utilizzo:
+_Esempi di utilizzo:_
 
 \* Variare la massa (m) da 60 a 100 kg (lasciando gli altri parametri di default):
 
@@ -90,7 +92,7 @@ python analisi\_dati.py -var ht -start 200 -stop 1000 -step 100
 
 
 
-2\. Simulazione Montecarlo
+*2\. Simulazione Montecarlo*
 
 Esegue la simulazione statistica su 500 lanci (con distribuzione gaussiana di masse e poissoniana dei lanci) e mostra i grafici di distribuzione (tempi, posizioni, gittate). In questo caso tutti gli altri parametri sono impostati di Default e stampati nel momento in cui lo script viene eseguito. 
 
