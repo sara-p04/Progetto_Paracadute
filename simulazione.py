@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as stats
 from paracadute1 import Paracadute
+
 # Funzione che esegue la simulazione di Montecarlo
 def simulazione(num_lanci, parametri):
     """
@@ -20,6 +22,10 @@ def simulazione(num_lanci, parametri):
     masse: array delle masse dei paracadutisti
 
     """
+
+    # impotiamo il seed per la riproducibilità
+    np.random.seed(42)
+    
     posizione = []
     gittate=[]
     
@@ -43,7 +49,8 @@ def simulazione(num_lanci, parametri):
     for i in range(num_lanci):
         
         p = Paracadute(masse[i], parametri['h0'], parametri['v0'], parametri['ka'], parametri['kc'], parametri['ht'])
-        t, sol = p.soluzione()
+        
+        _, sol = p.soluzione()
 
         gitt = sol[-1,0]
         gittate.append(gitt)
@@ -66,7 +73,7 @@ def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
     masse: array delle masse dei paracadutisti
 
     """
-    fig, axes = plt.subplots(2,2, figsize=(12,7))
+    fig, axes = plt.subplots(2,3, figsize=(12,7))
     fig.suptitle('Distribuzione delle posizioni di atterraggio', fontsize=16)
     # Primo grafico: posizione di atterraggio vs tempo di lancio
     axes[0,0].scatter(tempo_lancio[sesso=='M'], posizione[sesso=='M'], color='blue', alpha=0.5, label='Maschi')
@@ -87,6 +94,25 @@ def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
     axes[0,1].legend()
     axes[0,1].grid(True, linestyle='--', alpha=0.6)
 
+    # statistiche delle gittate
+    mu_m = np.mean(gittate[sesso=='M'])
+    sigma_m = np.std(gittate[sesso=='M'])
+    mu_f = np.mean(gittate[sesso=='F'])
+    sigma_f=np.std(gittate[sesso=='F'])
+
+    axes[0,2].hist(gittate[sesso=='M'], bins=30, density=True, alpha=0.4, color='blue')
+    axes[0,2].hist(gittate[sesso=='F'], bins=30, density=True, alpha=0.4, color='red')
+    
+    # Sovrapponiamo le curve teoriche
+    x_range_m = np.linspace(min(gittate[sesso=='M']) - 5, max(gittate[sesso=='M']) + 5, 100)
+    axes[0,2].plot(x_range_m, stats.norm.pdf(x_range_m, mu_m, sigma_m), color='blue', label='Teorica M')
+    x_range_f = np.linspace(min(gittate[sesso=='F']) - 5, max(gittate[sesso=='F']) + 5, 100)
+    axes[0,2].plot(x_range_f, stats.norm.pdf(x_range_f, mu_f, sigma_f), color='red', label='Teorica F')
+    axes[0,2].set_title('Densità di Probabilità delle Gittate')
+    axes[0,2].set_xlabel('Gittata (m)')
+    axes[0,2].set_ylabel('Probabilità')
+    axes[0,2].legend()
+
     # Terzo grafico: gittata vs massa del paracadutista
     axes[1,0].scatter(masse[sesso=='M'], gittate[sesso=='M'], color='blue', alpha=0.5, label='Maschi')
     axes[1,0].scatter(masse[sesso=='F'], gittate[sesso=='F'], color='red', alpha=0.2, label='Femmine')
@@ -96,11 +122,7 @@ def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
     axes[1,0].legend()
     axes[1,0].grid(True, linestyle='--', alpha=0.6)
 
-    # Quarto grafico: statistiche delle gittate
-    mu_m = np.mean(gittate[sesso=='M'])
-    sigma_m = np.std(gittate[sesso=='M'])
-    mu_f = np.mean(gittate[sesso=='F'])
-    sigma_f=np.std(gittate[sesso=='F'])
+    
     
     axes[1,1].axis('off')
     testo_statistiche = (
@@ -116,6 +138,7 @@ def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
                     fontsize=12
                    )
 
+    axes[1,2].axis('off')
    
     plt.tight_layout()
     plt.savefig('distribuzione_atterraggio1.png')

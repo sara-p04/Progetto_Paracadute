@@ -16,6 +16,8 @@ class Paracadute:
     k_chiuso : Coefficiente di attrito viscoso a paracadute CHIUSO (kg/s).
     ht : Quota a cui avviene l'apertura del paracadute (m).
     """
+    g = 9.81
+
     # Costruttore
     def __init__(self, m, h0, v0, ka, kc=None, ht=1000):
         self.m = m
@@ -41,8 +43,7 @@ class Paracadute:
         Restituisce:
         -----------------------------
         dx/dt, dy/dt, dvx/dt, dvy/dt
-        """
-        g = 9.81 
+        """ 
         dxdt = s[2]
         dydt = s[3]
         
@@ -52,7 +53,7 @@ class Paracadute:
             k = self.ka
         
         dvxdt = - (k/self.m)*s[2]
-        dvydt = - (k/self.m)*s[3] - g
+        dvydt = - (k/self.m)*s[3] - self.g
 
         return (dxdt, dydt, dvxdt, dvydt)
     # Soluzione dell'equazione del moto
@@ -70,11 +71,10 @@ class Paracadute:
         sol: matrice Nx4 con N: numero di istanti di tempo, 1 colonna: x(t), 2 colonna: y(t), 3 colonna: vx(t), 4 colonna: vy(t)
 
         """
-        g = 9.81
         
         k_max = self.ka
         # costruiamo l'array dei tempi in base ai parametri del problema
-        v_limite = (self.m * g) / k_max
+        v_limite = (self.m * self.g) / k_max
         t_stimato = self.h0 / v_limite
         t_finale = t_stimato * 1.5
         num_punti = int(t_finale * 50) 

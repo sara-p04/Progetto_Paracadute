@@ -1,18 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from paracadute1 import Paracadute
+import datetime
 import argparse 
 # Funzione neccessaria per passare e gestire gli argomenti da terminale
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Simulazione della caduta di un paracadutista')
-    parser.add_argument('-m', '--massa', type=float, default=75.0, help='Massa del paracadutista in kg (default: 80 kg)')
+    parser.add_argument('-m', '--massa', type=float, default=75.0, help='Massa del paracadutista in kg (default: 75 kg)')
     parser.add_argument('-h0', '--quotainizi', type=float, default=4000.0, help='Quota iniziale di lancio in metri (default: 4000 m)')
     parser.add_argument('-v0', '--velocitainiz', type=float, default=50.0, help='Velocità orizzontale iniziale in m/s (default: 50 m/s)')
     parser.add_argument('-ka', '--kaperto', type=float, default=60.0, help='Coefficiente di attrito a paracadute aperto in kg/s (default: 60 kg/s)')
     parser.add_argument('-kc', '--kchiuso', type=float, default=None, help='Coefficiente di attrito a paracadute chiuso in kg/s (default: None, uguale a ka)')
     parser.add_argument('-ht', '--quotaapertura', type=float, default=1000.0, help='Quota di apertura del paracadute in metri (default: 1000 m)')
 
-    parser.add_argument('-var', '--variare', required=True, choices=['m', 'h0', 'v0', 'ka', 'kc', 'ht'], help='Variabile da variare (massa, quotaapertura, velocità iniziale, coeffattrito1, coeffattrito2, quotaapertura)')
+    parser.add_argument('-var', '--variare', required=True, choices=['m', 'h0', 'v0', 'ka', 'kc', 'ht'], help='Variabile da variare (massa, quotaapertura, velocità iniziale, kaperto, kchiuso, quotaapertura)')
     parser.add_argument('-start', '--valinizzio', type=float, required=True, help='Valore iniziale della variabile da variare')
     parser.add_argument('-stop', '--valfine', type=float, required=True, help='Valore finale della variabile da variare')
     parser.add_argument('-step', '--passo', type=float, default=5, help='Passo di variazione della variabile da variare')
@@ -45,8 +46,8 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
         params = parametri_fissi.copy()
         params[parametro_variabile] = val
 
-        paracadutista = Paracadute(params['m'], params['h0'], params['v0'], params['ka'], params['kc'], params['ht'])
-        t, sol = paracadutista.soluzione()
+        p = Paracadute(params['m'], params['h0'], params['v0'], params['ka'], params['kc'], params['ht'])
+        t, sol = p.soluzione()
 
         x = sol[:,0]
         y = sol[:,1]
@@ -101,9 +102,9 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
     for chiave, valore in parametri_fissi.items():
         if chiave != parametro_variabile: 
             if valore == None: 
-                testo_fissi = testo_fissi + '{:s} = {:g} \n'.format(chiave, parametri_fissi['ka'])
+                testo_fissi += '{:s} = {:g}\n'.format(chiave, parametri_fissi['ka'])
             else:
-                testo_fissi = testo_fissi + '{:s} = {:g}\n'.format(chiave, valore)
+                testo_fissi += '{:s} = {:g}\n'.format(chiave, valore)
 
     axes[1,2].text(0.5, 0.5, testo_fissi, 
                    horizontalalignment='center',
@@ -114,7 +115,17 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
 
     plt.subplots_adjust(hspace=0.4, wspace=0.3)
     plt.tight_layout()
-    plt.savefig('analisi_{:s}_da{:g}_a{:g}.png'.format(parametro_variabile, valori_parametro[0], valori_parametro[-1]), dpi=300)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    nome_file = 'analisi_{}_da{:g}_a{:g}_{}.png'.format(
+        parametro_variabile, 
+        valori_parametro[0], 
+        valori_parametro[-1], 
+        timestamp
+    )
+    
+    plt.savefig(nome_file, dpi=300)
+    print(f"Grafico salvato come: {nome_file}")
     plt.show()
 
 def main():
@@ -129,7 +140,7 @@ def main():
         'ht': args.quotaapertura
     }
 
-    valori_parametro = np.arange(args.valinizzio, args.valfine + args.passo, args.passo)
+    valori_parametro = np.arange(args.valinizzio, args.valfine, args.passo)
 
     analisi_dati(args.variare, valori_parametro, parametri_fissi)
 
