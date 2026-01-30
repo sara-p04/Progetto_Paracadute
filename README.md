@@ -82,9 +82,9 @@ _Esempi di utilizzo:_
 
 python analisi\_dati.py -var m -start 60 -stop 100 -step 5
 
-\* Variare il coefficiente d'attrito (k1) specificando una massa personalizzata di 95kg:
+\* Variare il coefficiente d'attrito (ka) specificando una massa personalizzata di 95kg:
 
-python analisi\_dati.py -var k1 -start 10 -stop 25 -step 2 -m 95
+python analisi\_dati.py -var ka -start 10 -stop 25 -step 2 -m 95
 
 \* Variare la quota di apertura (ht) da 200m a 1000m:
 
