@@ -58,8 +58,8 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
         velocita_atterraggio.append(np.sqrt(vx[-1]**2 + vy[-1]**2))
         velocita_massima.append(np.max(np.sqrt(vx**2 + vy**2)))
         # 1. Traiettoria y(x) e 2. Velocità verticale v_y(t) per ogni valore del parametro variabile
-        axes[0,0].plot(x, y, label='{}={:.1f}'.format(parametro_variabile, val))
-        axes[0,1].plot(t, np.abs(vy), label='{}={:.1f}'.format(parametro_variabile, val))
+        axes[0,0].plot(x, y, label='{:s}={:.1f}'.format(parametro_variabile, val))
+        axes[0,1].plot(t, np.abs(vy), label='{:s}={:.1f}'.format(parametro_variabile, val))
     
     #1. Traiettoria y(x)
     axes[0,0].set_title('Traiettoria y(x)')
@@ -117,7 +117,7 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
     plt.tight_layout()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    nome_file = 'analisi_{}_da{:g}_a{:g}_{}.png'.format(
+    nome_file = 'analisi_{:s}_da{:g}_a{:g}_{}.png'.format(
         parametro_variabile, 
         valori_parametro[0], 
         valori_parametro[-1], 
@@ -140,7 +140,7 @@ def main():
         'ht': args.quotaapertura
     }
 
-    valori_parametro = np.arange(args.valinizzio, args.valfine, args.passo)
+    valori_parametro = np.arange(args.valinizzio, args.valfine+args.passo, args.passo)
 
     analisi_dati(args.variare, valori_parametro, parametri_fissi)
 

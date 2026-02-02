@@ -58,7 +58,7 @@ def simulazione(num_lanci, parametri):
         x_atterraggio = parametri['v0']*tempo_lancio[i] + gitt
         posizione.append(x_atterraggio)
     
-    return np.array(posizione), np.array(tempo_lancio), np.array(sesso), np.array(gittate), np.array(masse)
+    return np.array(posizione), tempo_lancio, sesso, np.array(gittate), masse
 # Funzione che crea i grafici della distribuzione delle posizioni di atterraggio
 def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
     """
@@ -84,7 +84,7 @@ def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
     axes[0,0].legend()
     axes[0,0].grid(True, linestyle='--', alpha=0.6)
 
-    # Secondo grafico: istogramma delle gittate
+    # Secondo grafico: istogramma della frequenza delle gittate
 
     axes[0,1].hist(gittate[sesso=='M'], bins=30, alpha=0.7, color='blue', label='Maschi')
     axes[0,1].hist(gittate[sesso=='F'], bins=30, alpha=0.5, color='red', label='Femmine')
@@ -100,6 +100,7 @@ def grafici_distribuzione(posizione, tempo_lancio, sesso, gittate, masse):
     mu_f = np.mean(gittate[sesso=='F'])
     sigma_f=np.std(gittate[sesso=='F'])
 
+    # Terzo grafico: densità di probabilità delle gittate
     axes[0,2].hist(gittate[sesso=='M'], bins=30, density=True, alpha=0.4, color='blue')
     axes[0,2].hist(gittate[sesso=='F'], bins=30, density=True, alpha=0.4, color='red')
     
