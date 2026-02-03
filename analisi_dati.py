@@ -7,15 +7,15 @@ import argparse
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Simulazione della caduta di un paracadutista')
     parser.add_argument('-m', '--massa', type=float, default=75.0, help='Massa del paracadutista in kg (default: 75 kg)')
-    parser.add_argument('-h0', '--quotainizi', type=float, default=4000.0, help='Quota iniziale di lancio in metri (default: 4000 m)')
-    parser.add_argument('-v0', '--velocitainiz', type=float, default=50.0, help='Velocità orizzontale iniziale in m/s (default: 50 m/s)')
+    parser.add_argument('-h0', '--quota_iniziale', type=float, default=4000.0, help='Quota iniziale di lancio in metri (default: 4000 m)')
+    parser.add_argument('-v0', '--velocita_iniziale', type=float, default=50.0, help='Velocità orizzontale iniziale in m/s (default: 50 m/s)')
     parser.add_argument('-ka', '--kaperto', type=float, default=60.0, help='Coefficiente di attrito a paracadute aperto in kg/s (default: 60 kg/s)')
     parser.add_argument('-kc', '--kchiuso', type=float, default=None, help='Coefficiente di attrito a paracadute chiuso in kg/s (default: None, uguale a ka)')
-    parser.add_argument('-ht', '--quotaapertura', type=float, default=1000.0, help='Quota di apertura del paracadute in metri (default: 1000 m)')
+    parser.add_argument('-ht', '--quota_apertura', type=float, default=1000.0, help='Quota di apertura del paracadute in metri (default: 1000 m)')
 
-    parser.add_argument('-var', '--variare', required=True, choices=['m', 'h0', 'v0', 'ka', 'kc', 'ht'], help='Variabile da variare (massa, quotaapertura, velocità iniziale, kaperto, kchiuso, quotaapertura)')
-    parser.add_argument('-start', '--valinizzio', type=float, required=True, help='Valore iniziale della variabile da variare')
-    parser.add_argument('-stop', '--valfine', type=float, required=True, help='Valore finale della variabile da variare')
+    parser.add_argument('-var', '--variare', required=True, choices=['m', 'h0', 'v0', 'ka', 'kc', 'ht'], help='Variabile da variare (massa, quota_iniziale, velocità iniziale, kaperto, kchiuso, quotaapertura)')
+    parser.add_argument('-start', '--val_iniziale', type=float, required=True, help='Valore iniziale della variabile da variare')
+    parser.add_argument('-stop', '--val_finale', type=float, required=True, help='Valore finale della variabile da variare')
     parser.add_argument('-step', '--passo', type=float, default=5, help='Passo di variazione della variabile da variare')
     return parser.parse_args()
 # Funzione principale di analisi dati
@@ -40,7 +40,7 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
     velocita_massima = []
 
     fig, axes = plt.subplots(2, 3, figsize=(12,6))
-    fig.suptitle('Analisi al variare di {:s} da {:g} a {:g}'.format(parametro_variabile, valori_parametro[0], valori_parametro[-1]), fontsize=16)
+    fig.suptitle('Analisi al variare di {:s} da {:.1f} a {:.1f}'.format(parametro_variabile, valori_parametro[0], valori_parametro[-1]), fontsize=16)
     # Ciclo sui valori del parametro variabile
     for val in valori_parametro:
         params = parametri_fissi.copy()
@@ -71,7 +71,7 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
     #2. Velocità verticale v_y(t)
     axes[0,1].set_title('Velocità verticale v_y(t)')
     axes[0,1].set_xlabel('t (s)')
-    axes[0,1].set_ylabel('v_y (m/s)')
+    axes[0,1].set_ylabel('|v_y| (m/s)')
     axes[0,1].legend(title=parametro_variabile, fontsize='x-small', framealpha=0.5)
     axes[0,1].grid(True, linestyle='--', alpha=0.6)
     
@@ -101,10 +101,10 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
     
     for chiave, valore in parametri_fissi.items():
         if chiave != parametro_variabile: 
-            if valore == None: 
-                testo_fissi += '{:s} = {:g}\n'.format(chiave, parametri_fissi['ka'])
+            if valore is None: 
+                testo_fissi += '{:s} = {:.1f}\n'.format(chiave, parametri_fissi['ka'])
             else:
-                testo_fissi += '{:s} = {:g}\n'.format(chiave, valore)
+                testo_fissi += '{:s} = {:.1f}\n'.format(chiave, valore)
 
     axes[1,2].text(0.5, 0.5, testo_fissi, 
                    horizontalalignment='center',
@@ -117,7 +117,7 @@ def analisi_dati(parametro_variabile, valori_parametro, parametri_fissi):
     plt.tight_layout()
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    nome_file = 'analisi_{:s}_da{:g}_a{:g}_{}.png'.format(
+    nome_file = 'analisi_{:s}_da{:.1f}_a{:.1f}_{}.png'.format(
         parametro_variabile, 
         valori_parametro[0], 
         valori_parametro[-1], 
@@ -133,14 +133,14 @@ def main():
 
     parametri_fissi = {
         'm': args.massa,
-        'h0': args.quotainizi,
-        'v0': args.velocitainiz,
+        'h0': args.quota_iniziale,
+        'v0': args.velocita_iniziale,
         'ka': args.kaperto,
         'kc': args.kchiuso,
-        'ht': args.quotaapertura
+        'ht': args.quota_apertura
     }
 
-    valori_parametro = np.arange(args.valinizzio, args.valfine+args.passo, args.passo)
+    valori_parametro = np.arange(args.val_iniziale, args.val_finale+args.passo, args.passo)
 
     analisi_dati(args.variare, valori_parametro, parametri_fissi)
 

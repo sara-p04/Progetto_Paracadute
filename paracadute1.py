@@ -24,7 +24,7 @@ class Paracadute:
         self.h0 = h0
         self.v0 = v0
         self.ka = ka
-        if kc==None:
+        if kc is None:
             self.kc = ka
         else:
             self.kc = kc
@@ -77,9 +77,9 @@ class Paracadute:
         v_limite = (self.m * self.g) / k_max
         t_stimato = self.h0 / v_limite
         t_finale = t_stimato * 1.5
-        num_punti = int(t_finale * 50) 
+        dt = 0.1 
         
-        t = np.linspace(0, t_finale, num_punti)
+        t = np.arange(0, t_finale, dt)
         
         # condizioni iniziali: [x0, y0, vx0, vy0]
         s_iniz = np.array([0, self.h0, self.v0, 0]) 

@@ -31,10 +31,10 @@ def simulazione(num_lanci, parametri):
     
     # Generazione casuale dei tempi di lancio, masse 
     dt = np.random.exponential(scale=20.0, size=num_lanci)
-    tempo_lancio=np.cumsum(dt)
+    tempo_lancio = np.cumsum(dt)
 
     masse = np.zeros(num_lanci)
-    sesso=np.empty(num_lanci, dtype='<U1')
+    sesso = np.empty(num_lanci, dtype='<U1')
 
     num_maschi = (num_lanci +1) // 2
     num_femmine = num_lanci // 2
@@ -156,7 +156,7 @@ def main():
     }
     print('Parametri della simulazione: \n ----------------------')
     for chiave, valore in parametri.items():
-        print('{:s}: {:g}'.format(chiave, valore))
+        print('{:s}: {:.1f}'.format(chiave, valore))
     
     num_lanci = 500
     
